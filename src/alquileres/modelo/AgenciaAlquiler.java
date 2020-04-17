@@ -1,9 +1,12 @@
+package alquileres.modelo;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 /**
  * La clase guarda en una colecci√≥n List (un ArrayList) la flota de veh√≠culos
  * que una agencia de alquiler posee
@@ -29,8 +32,10 @@ public class AgenciaAlquiler {
 	 * a√±ade un nuevo veh√≠culo solo si no existe
 	 * 
 	 */
-	public void addVehiculo() {
-
+	public void addVehiculo(Vehiculo o) {
+		if(!flota.contains(o)){
+			flota.add(o);
+		}
 	}
 
 	/**
@@ -45,9 +50,20 @@ public class AgenciaAlquiler {
 	 * Asumimos todos los datos correctos. Puede haber espacios antes y despu√©s
 	 * de cada dato
 	 */
-	private Vehiculo obtenerVehiculo() {
+	private Vehiculo obtenerVehiculo(String vehiculo) {
 
-		return null;
+		String[] info = vehiculo.split(",");
+		String[] datos = new String[info.length];
+		for(int i = 0; i < info.length; i++){
+			datos[i] = info[i].trim();
+		}
+		if(datos[0].equalsIgnoreCase("C")){
+			return new Coche(Integer.parseInt(datos[5]), datos[1], datos[2], datos[3],
+					Double.parseDouble(datos[4]));
+		}else{
+			return new Furgoneta(Double.parseDouble(datos[5]), datos[1], datos[2], datos[3],
+					Double.parseDouble(datos[4]));
+		}
 	}
 
 	/**
@@ -76,9 +92,14 @@ public class AgenciaAlquiler {
 	 */
 	@Override
 	public String toString() {
-
-		return null;
-
+		StringBuilder sb = new StringBuilder();
+		sb.append("VehÌculos en alquiler de la agencia " + nombre);
+		sb.append("\nTotal vehÌculos " + flota.size() + "\n" + "\n");
+		for (Vehiculo vehiculo: flota) {
+			sb.append(vehiculo.toString() + "\n" + 
+					"\n------------------------------------------------------\n");
+		}
+		return sb.toString();
 	}
 
 	/**
@@ -87,10 +108,17 @@ public class AgenciaAlquiler {
 	 * costar√≠a alquilar cada coche el n¬∫ de d√≠as indicado * 
 	 *  
 	 */
-	public String buscarCoches() {
+	public String buscarCoches(int dias) {
 
-		return null;
-
+		StringBuilder sb = new StringBuilder();
+		for(Vehiculo vehiculo: flota){
+			if(vehiculo instanceof Coche){
+				sb.append(vehiculo.toString() + "\nCoste alquiler " + dias + " dÌas: " + 
+						vehiculo.calcularPrecioAlquiler(dias) + "Ä" + "\n" + 
+						"\n------------------------------------------------------\n");
+			}
+		}
+		return sb.toString();
 	}
 
 	/**
@@ -100,7 +128,16 @@ public class AgenciaAlquiler {
 	 */
 	public List<Coche> cochesOrdenadosMatricula() {
 
-		return null;
+		Iterator<Vehiculo> it = flota.iterator();
+		List<Coche> ordenados = new ArrayList<>();
+		while(it.hasNext()){
+			Vehiculo aux = it.next();
+			if(aux instanceof Coche && ((Coche) aux).getnPlazas() > 4){
+				ordenados.add((Coche) aux);
+			}
+		}
+		Collections.sort(ordenados);
+		return ordenados;
 	}
 
 	/**
@@ -109,8 +146,19 @@ public class AgenciaAlquiler {
 	 * 
 	 */
 	public List<Furgoneta> furgonetasOrdenadasPorVolumen() {
-
-		return null;
+		List<Furgoneta> ordenados = new ArrayList<>();
+		for (Vehiculo vehiculo: flota) {
+			if(vehiculo instanceof Furgoneta) {
+				ordenados.add((Furgoneta) vehiculo);
+			}
+		}
+		Collections.sort(ordenados, new Comparator<Furgoneta>()
+		{
+		public int compare(Furgoneta f1, Furgoneta f2){
+			return Double.compare(f1.getVolumen(), f2.getVolumen());
+			}
+		});
+		return ordenados;
 
 	}
 
@@ -120,7 +168,8 @@ public class AgenciaAlquiler {
 	 * de los modelos en cada marca como valor asociado
 	 */
 	public Map<String, Set<String>> marcasConModelos() {
-
+		
+		//No sÈ hacerlo.
 		return null;
 	}
 

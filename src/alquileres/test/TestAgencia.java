@@ -1,3 +1,5 @@
+package alquileres.test;
+import alquileres.modelo.*;
 
 import java.util.Map;
 import java.util.Set;
@@ -91,13 +93,14 @@ public class TestAgencia {
 	 * inicio de la aplicaci√≥n
 	 */
 	public static void main(String[] args) {
-		TestAgencia test = new TestAgencia();
-
-		test.testBuscarCoches();
-		test.testCochesOrdenadosMatricula();
-		test.testFurgonetasOrdenadasPorVolumen();
-
-		test.testMarcasConModelos();
-
+		if(args.length != 1){
+			System.out.println("Error en n∫ argumentos\nSintaxis: java TestAgencia <nombre-agencia>");
+		}else{
+			TestAgencia test = new TestAgencia(args[0]);
+			test.testBuscarCoches();
+			test.testCochesOrdenadosMatricula();
+			test.testFurgonetasOrdenadasPorVolumen();
+			test.testMarcasConModelos();
+		}
 	}
 }
